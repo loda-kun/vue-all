@@ -2,9 +2,15 @@
     <div id="app">
         <div class="container">
             <h2>Todo App</h2>
-            <AddTodo />
-            <TodoList :todos="todos" />
-
+            <AddTodo @addTask="addTask"/>
+            <div class="mt-3">
+                <h2>Uncompleted</h2>
+            </div>
+            <TodoList :todos="uncompletedTasks" @completeTask="completeTask"/>
+            <div class="mt-3">
+                <h2>Completed</h2>
+            </div>
+            <TodoList :todos="completedTasks" @completeTask="completeTask"/>
         </div>
     </div>
 
@@ -21,7 +27,7 @@
             AddTodo,
             TodoList
         },
-        data(){
+        data() {
             return {
                 todos: []
             }
@@ -31,6 +37,27 @@
                 .then(res => this.todos = res.data)
                 .catch(err => console.log(err));
 
+        },
+        methods: {
+            addTask(task) {
+                axios.post("https://jsonplaceholder.typicode.com/todos", {
+                    title: task,
+                    completed: false
+                }).then(res => this.todos.push(res.data))
+                    .catch(err => console.log(err));
+            },
+            completeTask(id) {
+                this.todos = this.todos
+                    .filter(todo => todo.id !== id);
+            }
+        },
+        computed: {
+            uncompletedTasks() {
+                return this.todos.filter(todo => !todo.completed);
+            },
+            completedTasks() {
+                return this.todos.filter(todo => todo.completed);
+            }
         }
     }
 </script>

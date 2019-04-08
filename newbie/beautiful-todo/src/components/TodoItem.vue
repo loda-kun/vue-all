@@ -1,31 +1,47 @@
 <template>
-    <div class="form-input">
-        <a-checkbox @change="onChange" v-bind:class="{ completed: task.completed }" v-bind:checked="task.completed">
-            {{task.title}}
+    <div>
+        <a-checkbox @change="onChange"
+                    class="float-left"
+                    :class="{ completed: localTask.completed }"
+                    :checked="localTask.completed">
+            {{localTask.title}}
         </a-checkbox>
-        <a class="float-right"><a-icon slot="suffix" type="close-circle" @click="completeTask" /></a>
+        <a class="float-right">
+            <a-icon lass="float-right"
+                    type="close-circle"
+                    @click="completeTask"/>
+        </a>
     </div>
 </template>
 
 <script>
     export default {
         name: "TodoItem",
-        props:{
+        props: {
             task: Object
         },
-        methods:{
-            onChange(){
-                this.task.completed = !this.task.completed;
+        data(){
+            return {
+                localTask: this.task
+            }
+        },
+        methods: {
+            onChange() {
+                this.localTask.completed = !this.localTask.completed;
             },
-            completeTask(){
-                console.log("CLose task");
+            completeTask() {
+                this.$emit('completeTask', this.localTask.id);
             }
         }
     }
 </script>
 
 <style scoped>
-.completed{
-    text-decoration: line-through;
-}
+    div {
+        width: 100%;
+    }
+
+    .completed {
+        text-decoration: line-through;
+    }
 </style>

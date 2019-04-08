@@ -1,10 +1,12 @@
 <template>
     <div class="mt-2">
-        <h2>Uncompleted</h2>
-
         <div class="list-group mt-2" role="tablist">
-            <div v-for="todo in todos" v-bind:key="todo.id" class="list-group-item d-flex" role="tab">
-                <TodoItem :task="todo"/>
+            <div v-for="todo in todos" :key="todo.id"
+                 class="list-group-item d-flex" role="tab">
+                <TodoItem :task="todo"
+                          @completeTask="completeTask"
+
+                />
             </div>
         </div>
 
@@ -21,6 +23,11 @@
         },
         props:{
             todos: Array
+        },
+        methods:{
+            completeTask(id){
+                this.$emit('completeTask', id);
+            }
         }
     }
 </script>
